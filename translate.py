@@ -72,7 +72,19 @@ def get_all_translations(rna_sequence, genetic_code):
         A list of strings; each string is an sequence of amino acids encoded by
         `rna_sequence`.
     """
-    pass
+    rna_sequence = rna_sequence.upper()
+    if len(rna_sequence) < 3 or rna_sequence[0:2] == "*" in genetic_code: 
+         return ""
+    else:
+        amino_acids = []
+        for base in range(0, len(rna_sequence), 3):
+            codon = rna_sequence[base:base+3]
+            if genetic_code[codon] == "*":
+                break
+            else:
+                amino_acids.append(genetic_code[codon])
+                amino_acids_list = list(amino_acids)
+        return amino_acids_list
 
 def get_reverse(sequence):
     """Reverse orientation of `sequence`.
