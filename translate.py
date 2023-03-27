@@ -35,6 +35,8 @@ def translate_sequence(rna_sequence, genetic_code):
         amino_acids = []
         for base in range(0, len(rna_sequence), 3):
             codon = rna_sequence[base:base+3]
+            if len(codon) < 3:
+                break
             if genetic_code[codon] == "*":
                 break
             else:
@@ -43,6 +45,7 @@ def translate_sequence(rna_sequence, genetic_code):
     
     # You've basically got it, the only thing that is causing an error is the test where there is no stop codon and an additional base.
     # You might want to include another "break" if the codon is less than 3 base pairs, because at the moment it hits a single base and the key error output is 'A' which is the last straggler base pair.
+    # Hannah 02/26: added it in the if statement, so that if the length of the rna_sequence is not divisible by 3, then it will reutrn the empty string.
 
 def get_all_translations(rna_sequence, genetic_code):
     """Get a list of all amino acid sequences encoded by an RNA sequence.
@@ -80,14 +83,18 @@ def get_all_translations(rna_sequence, genetic_code):
          return ""
     else:
         amino_acids = []
+        amino_acids_list = []
         for base in range(0, len(rna_sequence), 3):
             codon = rna_sequence[base:base+3]
+            if len(codon) < 3:
+                break
             if genetic_code[codon] == "*":
                 break
             else:
-                amino_acids.append(genetic_code[codon])
-                amino_acids_list = list(amino_acids)
+                amino_acids += genetic_code[codon]
+            amino_acids_list.append(amino_acids)
         return amino_acids_list
+
 #Right now this is adding each individual codon's protein as a different component of a list, and the desired output is to have all of the components of a single protein together as a string, and have multiple strings in your list. 
 # i.e. some of your outputs right now are returning ['M', 'T', 'V', 'Y'], when it wants ['MTVY']
 # to get the different amino acids of a single protein in a string together try using += for a string that is a single protein instead of the .append methods.
