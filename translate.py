@@ -38,10 +38,12 @@ def translate_sequence(rna_sequence, genetic_code):
             if len(codon) < 3:
                 break
             if genetic_code.get(codon) == "*":
+            if genetic_code[codon] == "*":
                 break
             else:
                 amino_acids.append(genetic_code[codon])
         return "".join(amino_acids)
+    
 
 def get_all_translations(rna_sequence, genetic_code):
     """Get a list of all amino acid sequences encoded by an RNA sequence.
@@ -205,8 +207,6 @@ def get_longest_peptide(rna_sequence, genetic_code):
             return ""
         longest_peptide = max(amino_acids_list, key=len)
         return longest_peptide
-
-
 
 
 
