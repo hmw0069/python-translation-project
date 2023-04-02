@@ -35,7 +35,9 @@ def translate_sequence(rna_sequence, genetic_code):
         amino_acids = []
         for base in range(0, len(rna_sequence), 3):
             codon = rna_sequence[base:base+3]
-            if genetic_code[codon] == "*":
+            if len(codon) < 3:
+                break
+            if genetic_code.get(codon) == "*":
                 break
             else:
                 amino_acids.append(genetic_code[codon])
@@ -73,18 +75,25 @@ def get_all_translations(rna_sequence, genetic_code):
         `rna_sequence`.
     """
     rna_sequence = rna_sequence.upper()
-    if len(rna_sequence) < 3 or rna_sequence[0:2] == "*" in genetic_code: 
-         return ""
-    else:
-        amino_acids = []
-        for base in range(0, len(rna_sequence), 3):
-            codon = rna_sequence[base:base+3]
-            if genetic_code[codon] == "*":
-                break
-            else:
-                amino_acids.append(genetic_code[codon])
-                amino_acids_list = list(amino_acids)
-        return amino_acids_list
+    amino_acids_list = []
+    for i in range(3):
+        j = i
+        while j < len(rna_sequence):
+            codon = rna_sequence[j:j+3]
+            if codon == "AUG":
+                amino_acids = []
+                while j < len(rna_sequence):
+                    codon = rna_sequence[j:j+3]
+                    if codon in genetic_code:
+                        if genetic_code[codon] == "*":
+                            break
+                        amino_acids.append(genetic_code[codon])
+                    j += 3
+                amino_acids_list.append("".join(amino_acids))
+            j += 3
+    return amino_acids_list
+
+
 
 def get_reverse(sequence):
     """Reverse orientation of `sequence`.
@@ -171,7 +180,34 @@ def get_longest_peptide(rna_sequence, genetic_code):
         A string of the longest sequence of amino acids encoded by
         `rna_sequence`.
     """
-    pass
+    rna_sequence = rna_sequence.upper()
+    if len(rna_sequence) < 3 or rna_sequence[0:2] == "*" in genetic_code:
+         return ""
+    else:
+        amino_acids_list = []
+        for sequence in [rna_sequence, reverse_and_complement(rna_sequence)]:
+            for i in range(3):
+                j = i
+                while j < len(sequence):
+                    codon = sequence[j:j+3]
+                    if codon == "AUG":
+                        amino_acids = []
+                        while j < len(sequence):
+                            codon = sequence[j:j+3]
+                            if codon in genetic_code:
+                                if genetic_code[codon] == "*":
+                                    break
+                                amino_acids.append(genetic_code[codon])
+                            j += 3
+                        amino_acids_list.append("".join(amino_acids))
+                    j += 3
+        if not amino_acids_list:
+            return ""
+        longest_peptide = max(amino_acids_list, key=len)
+        return longest_peptide
+
+
+
 
 
 if __name__ == '__main__':
