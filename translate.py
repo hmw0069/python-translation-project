@@ -37,7 +37,6 @@ def translate_sequence(rna_sequence, genetic_code):
             codon = rna_sequence[base:base+3]
             if len(codon) < 3:
                 break
-            if genetic_code.get(codon) == "*":
             if genetic_code[codon] == "*":
                 break
             else:
